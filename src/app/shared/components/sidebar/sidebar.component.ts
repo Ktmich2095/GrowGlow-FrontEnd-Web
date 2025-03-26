@@ -17,7 +17,7 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     const userName = localStorage.getItem('userName');
     if (userName) {
-      this.userName = userName;  // Asigna el nombre de usuario de localStorage
+      this.userName = userName;  
     } else {
       this.userName = 'Invitado';
     }
