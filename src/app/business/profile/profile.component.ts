@@ -1,26 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { RachaService } from '../../core/services/racha.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-profile',
-  standalone:true,
-  imports:[CommonModule,FormsModule],
+  selector: 'app-perfil',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
-export class ProfileComponent implements OnInit {
-
-  usuario = {
-    nombre: 'Usuario de Prueba',
-    email: 'usuario@ejemplo.com',
+export class ProfileComponent {
+  @Input() usuario: { nombre?: string; email?: string; diasConsecutivos?: number } = {
+    nombre: 'Usuario',
+    email: 'Correo no disponible',
     diasConsecutivos: 0
   };
-
-  constructor(private rachaService: RachaService) {}
-
-  ngOnInit() {
-    this.usuario.diasConsecutivos = this.rachaService.obtenerRacha();
-  }
 }

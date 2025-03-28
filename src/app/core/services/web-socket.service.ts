@@ -8,7 +8,7 @@ export class WebSocketService {
   private sensorDataSubject: BehaviorSubject<any> = new BehaviorSubject<any>(this.generateRandomSensorData());
 
   constructor() {
-    interval(3000).subscribe(() => {
+    interval(5000).subscribe(() => {
       this.sensorDataSubject.next(this.generateRandomSensorData());
     });
   }

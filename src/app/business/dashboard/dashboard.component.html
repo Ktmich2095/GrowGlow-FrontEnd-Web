@@ -7,8 +7,9 @@
   </header>
 
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    
+    <!-- Tarjetas Izquierda -->
     <div class="space-y-6">
-      
       <!-- Tarjeta de Luz -->
       <div class="bg-white p-6 rounded-xl shadow">
         <div class="flex justify-between items-center mb-4">
@@ -48,7 +49,15 @@
           </div>
         </div>
       </div>
+    </div>
 
+    <!-- Imagen Central -->
+    <div class="flex justify-center items-center">
+      <img src="planta.jpg" alt="Planta Monitoreada" class="w-48 h-48 object-cover rounded-lg shadow-lg">
+    </div>
+
+    <!-- Tarjetas Derecha -->
+    <div class="space-y-6">
       <!-- Tarjeta de Humedad del Suelo -->
       <div class="bg-white p-6 rounded-xl shadow">
         <div class="flex justify-between items-center mb-4">
@@ -84,10 +93,11 @@
           </div>
         </div>
       </div>
-
     </div>
+
   </div>
 
+  <!-- Controles -->
   <div class="bg-white p-6 rounded-xl shadow mb-8">
     <h3 class="font-semibold text-gray-800 mb-4">Controles</h3>
     <div class="grid grid-cols-2 gap-4">
