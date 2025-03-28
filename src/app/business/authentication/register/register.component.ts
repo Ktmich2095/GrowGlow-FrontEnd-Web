@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -16,35 +17,58 @@ export class RegisterComponent {
   email: string = '';
   password: string = '';
   confirmPassword: string = '';
+  errorMessage: string = '';
+  isLoading: boolean = false; // Nuevo: para controlar el estado de carga
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private http: HttpClient, 
+    private router: Router,
+    private authService: AuthService,
+    private ngZone: NgZone // Inyecta NgZone
+  ) {}
 
   goToLogin() {
     this.router.navigate(['/login']);
   }
 
   register() {
-  const newUser = { nombre: this.name, email: this.email, password: this.password };
+    if (this.password !== this.confirmPassword) {
+      this.errorMessage = 'Las contraseñas no coinciden';
+      return;
+    }
 
-  this.http.post<any>('http://localhost:5000/api/usuarios/register', newUser)
-    .subscribe(response => {
-      if (this.password === this.confirmPassword) {
-        console.log('Usuario registrado:', response);
-        // Asegúrate de que el nombre se guarde en localStorage
-        if (response && response.token) {
-          localStorage.setItem('authToken', response.token);
-          localStorage.setItem('userName', response.user.nombre); // Guardar el nombre
+    this.isLoading = true; 
+    const newUser = { 
+      nombre: this.name, 
+      email: this.email, 
+      password: this.password 
+    };
+
+    this.http.post<any>('http://localhost:5000/api/usuarios/register', newUser)
+      .subscribe({
+        next: (response) => {
+          console.log('Registro exitoso:', response);
+          if (response?.usuario) {
+            this.authService.setToken(response.token);
+            this.authService.setCurrentUser(response.usuario.nombre);
+            
+            this.ngZone.run(() => {
+              alert('¡Registro exitoso! Serás redirigido al Dashboard.');
+              
+              setTimeout(() => {
+                this.router.navigate(['/login']);
+              }, 200);
+            });
+          } else {
+            this.errorMessage = 'Respuesta inesperada del servidor';
+          }
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error en registro:', error);
+          this.errorMessage = error.error?.message || 'Error al registrarse. Intente nuevamente.';
+          this.isLoading = false;
         }
-        window.alert('¡Registro exitoso! Serás redirigido al login.');
-        this.router.navigate(['/login']);
-      } else {
-        console.log("Las contraseñas no coinciden");
-      }
-    }, error => {
-      console.error('Error al registrar usuario:', error);
-      window.alert('Hubo un error al registrarte. Por favor, inténtalo nuevamente.');
-    });
-}
-
-  
+      });
+  }
 }

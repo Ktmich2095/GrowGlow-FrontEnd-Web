@@ -2,74 +2,53 @@
   <header class="flex justify-between items-center mb-8">
     <h1 class="text-2xl font-bold text-primary-purple">GrowGlow</h1>
     <div class="flex items-center gap-4">
-      <button class="p-2 rounded-full bg-white shadow">
-        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-        </svg>
-      </button>
+      
       <img src="user-avatar.jpg" alt="Usuario" class="w-10 h-10 rounded-full">
     </div>
   </header>
-
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-    <!-- Tarjeta de Luz -->
-    <div class="bg-white p-6 rounded-xl shadow">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="font-semibold text-gray-800">Luz</h3>
-        <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Óptima</span>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="space-y-6">
+      <!-- Tarjeta de Luz -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-semibold text-gray-800">Luz</h3>
+          <span class="text-sm px-2 py-1 rounded" 
+                [ngClass]="{
+                  'bg-green-100 text-green-800': sensorData.luz.valor >= 50,
+                  'bg-yellow-100 text-yellow-800': sensorData.luz.valor < 50
+                }">
+            {{ sensorData.luz.estado }}
+          </span>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-primary-purple mb-2">
+            {{ sensorData.luz.valor }}{{ sensorData.luz.unidad }}
+          </div>
+          <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full bg-yellow-400" [style.width.%]="sensorData.luz.valor"></div>
+          </div>
+        </div>
       </div>
-      <div class="text-center">
-        <div class="text-4xl font-bold text-primary-purple mb-2">60%</div>
-        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-          <div class="h-full bg-yellow-400" style="width: 60%"></div>
+
+      <!-- Tarjeta de Temperatura -->
+      <div class="bg-white p-6 rounded-xl shadow">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-semibold text-gray-800">Temperatura</h3>
+          <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">
+            {{ sensorData.temperatura.estado }}
+          </span>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl font-bold text-primary-purple mb-2">
+            {{ sensorData.temperatura.valor }}{{ sensorData.temperatura.unidad }}
+          </div>
+          <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full bg-red-400" [style.width.%]="sensorData.temperatura.valor"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Tarjeta de Temperatura -->
-    <div class="bg-white p-6 rounded-xl shadow">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="font-semibold text-gray-800">Temperatura</h3>
-        <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">24°C</span>
-      </div>
-      <div class="text-center">
-        <div class="text-4xl font-bold text-primary-purple mb-2">70%</div>
-        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-          <div class="h-full bg-red-400" style="width: 70%"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tarjeta de Humedad -->
-    <div class="bg-white p-6 rounded-xl shadow">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="font-semibold text-gray-800">Humedad</h3>
-        <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">Buena</span>
-      </div>
-      <div class="text-center">
-        <div class="text-4xl font-bold text-primary-purple mb-2">65%</div>
-        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-          <div class="h-full bg-blue-400" style="width: 65%"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tarjeta de pH -->
-    <div class="bg-white p-6 rounded-xl shadow">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="font-semibold text-gray-800">Nivel de pH</h3>
-        <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">6.5</span>
-      </div>
-      <div class="text-center">
-        <div class="text-4xl font-bold text-primary-purple mb-2">6.5</div>
-        <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-          <div class="h-full bg-green-400" style="width: 65%"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Controles -->
   <div class="bg-white p-6 rounded-xl shadow mb-8">
     <h3 class="font-semibold text-gray-800 mb-4">Controles</h3>
     <div class="grid grid-cols-2 gap-4">
