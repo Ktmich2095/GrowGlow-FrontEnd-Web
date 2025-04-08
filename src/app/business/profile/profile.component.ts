@@ -1,7 +1,10 @@
 import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
+  standalone: true,
+  imports: [RouterLink],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
