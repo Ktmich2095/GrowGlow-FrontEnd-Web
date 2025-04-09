@@ -1,94 +1,42 @@
-<div class="bg-neutral-light min-h-screen p-6">
-  <header class="flex justify-between items-center mb-8">
-    <h1 class="text-2xl font-bold text-primary-purple">GrowGlow</h1>
+<div class="dashboard-container p-4">
+  <header class="dashboard-header text-center mb-6">
+    <h1 class="text-2xl font-bold text-primary mb-2">Panel de Monitoreo de Sensores</h1>
+    <div class="last-update text-sm text-gray-600">
+      Última actualización: {{ lastUpdate | date:'mediumTime' }}
+      <span class="update-indicator text-green-500 ml-1 animate-pulse">●</span>
+    </div>
   </header>
 
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">    
-    <div class="space-y-6">
-      <div class="bg-white p-6 rounded-xl shadow">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="font-semibold text-gray-800">Luz</h3>
-          <span class="text-sm px-2 py-1 rounded"
-                [ngClass]="{
-                  'bg-green-100 text-green-800': sensorData.luz?.valor >= 50,
-                  'bg-yellow-100 text-yellow-800': sensorData.luz?.valor < 50
-                }">
-            {{ sensorData.luz?.estado }}
-          </span>
-        </div>
-        <div class="text-center">
-          <div class="text-4xl font-bold text-primary-purple mb-2">
-            {{ sensorData.luz?.valor }}{{ sensorData.luz?.unidad }}
-          </div>
-          <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-yellow-400" [style.width.%]="sensorData.luz?.valor"></div>
-          </div>
-        </div>
+  <div class="grid grid-cols-3 gap-4 items-center">
+    <!-- Columna izquierda -->
+    <div class="flex flex-col gap-4">
+      <div class="sensor-card bg-white shadow-md rounded-lg p-4">
+        <h2 class="text-lg font-semibold text-secondary mb-2">Temperatura</h2>
+        <div id="chart-temperatura" class="chart h-40"></div>
       </div>
 
-      <!-- Tarjeta de Temperatura -->
-      <div class="bg-white p-6 rounded-xl shadow">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="font-semibold text-gray-800">Temperatura</h3>
-          <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">
-            {{ sensorData.temperatura?.estado }}
-          </span>
-        </div>
-        <div class="text-center">
-          <div class="text-4xl font-bold text-primary-purple mb-2">
-            {{ sensorData.temperatura?.valor }}{{ sensorData.temperatura?.unidad }}
-          </div>
-          <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-red-400" [style.width.%]="sensorData.temperatura?.valor"></div>
-          </div>
-        </div>
+      <div class="sensor-card bg-white shadow-md rounded-lg p-4">
+        <h2 class="text-lg font-semibold text-secondary mb-2">Humedad del Aire</h2>
+        <div id="chart-humedadaire" class="chart h-40"></div>
       </div>
     </div>
 
-    <!-- Imagen Central -->
+    <!-- Imagen central -->
     <div class="flex justify-center items-center">
-      <img src="assets/moth.png" alt="Planta Monitoreada" class="w-48 h-48 object-cover rounded-lg shadow-lg">
+      <img src="assets/moth.png" alt="Planta en Maceta" class="max-h-80 object-contain" />
     </div>
 
-    <!-- Tarjetas Derecha -->
-    <div class="space-y-6">
-      <!-- Tarjeta de Humedad del Suelo -->
-      <div class="bg-white p-6 rounded-xl shadow">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="font-semibold text-gray-800">Humedad del Suelo</h3>
-          <span class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">
-            {{ sensorData.humedadSuelo?.estado }}
-          </span>
-        </div>
-        <div class="text-center">
-          <div class="text-4xl font-bold text-primary-purple mb-2">
-            {{ sensorData.humedadSuelo?.valor }}{{ sensorData.humedadSuelo?.unidad }}
-          </div>
-          <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-blue-400" [style.width.%]="sensorData.humedadSuelo?.valor"></div>
-          </div>
-        </div>
+    <!-- Columna derecha -->
+    <div class="flex flex-col gap-4">
+      <div class="sensor-card bg-white shadow-md rounded-lg p-4">
+        <h2 class="text-lg font-semibold text-secondary mb-2">Humedad del Suelo</h2>
+        <div id="chart-humedadsuelo" class="chart h-40"></div>
       </div>
 
-      <!-- Tarjeta de Humedad del Aire -->
-      <div class="bg-white p-6 rounded-xl shadow">
-        <div class="flex justify-between items-center mb-4">
-          <h3 class="font-semibold text-gray-800">Humedad del Aire</h3>
-          <span class="text-sm bg-blue-100 text-blue-800 px-2 py-1 rounded">
-            {{ sensorData.humedadAire?.estado }}
-          </span>
-        </div>
-        <div class="text-center">
-          <div class="text-4xl font-bold text-primary-purple mb-2">
-            {{ sensorData.humedadAire?.valor }}{{ sensorData.humedadAire?.unidad }}
-          </div>
-          <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div class="h-full bg-blue-500" [style.width.%]="sensorData.humedadAire?.valor"></div>
-          </div>
-        </div>
+      <div class="sensor-card bg-white shadow-md rounded-lg p-4">
+        <h2 class="text-lg font-semibold text-secondary mb-2">Nivel de Luz</h2>
+        <div id="chart-luz" class="chart h-40"></div>
       </div>
     </div>
-
   </div>
-
 </div>
