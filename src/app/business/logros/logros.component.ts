@@ -10,7 +10,6 @@ import { CommonModule } from '@angular/common';
   templateUrl: './logros.component.html',
   styleUrl: './logros.component.css'
 })
-// logros.component.ts
 export class LogrosComponent implements OnInit, OnDestroy {
   rachaActual: number = 0;
   historial: { fecha: string, duracion: number, logro: string }[] = [];
@@ -20,19 +19,14 @@ export class LogrosComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.actualizarDatos();
     
-    this.rachaService.socket.on('actualizarSensores', (datos: string) => {
+    this.rachaService.socket.on('actualizarSensores', () => {
       this.actualizarDatos();
     });
   }
 
   private actualizarDatos() {
     this.rachaActual = this.rachaService.obtenerRacha();
-    this.historial = [...this.rachaService.obtenerHistorial()]; 
-    
-    console.log('Datos actualizados:', {
-      racha: this.rachaActual,
-      historial: this.historial
-    });
+    this.historial = [...this.rachaService.obtenerHistorial()];
   }
 
   ngOnDestroy() {
