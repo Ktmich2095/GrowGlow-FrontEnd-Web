@@ -15,31 +15,26 @@
         {{ rachaActual > 0 ? 'Activa' : 'Finalizada' }}
       </div>
     </div>
-    <button (click)="verificarSensores()" class="mt-4 px-4 py-2 bg-emerald-500 text-white rounded hover:bg-emerald-600 text-sm">
-      Verificar estado de la planta
-    </button>
   </div>
+  
 
-  <!-- Histórico de Rachas -->
+  <!-- Sección de Historial de Rachas -->
   <div class="bg-white p-6 rounded-xl shadow-md">
     <h2 class="text-xl font-semibold text-gray-800 mb-4">Historial de Rachas</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full border-collapse">
-        <thead>
-          <tr class="bg-gray-200 text-gray-700">
-            <th class="px-4 py-2 text-left">Fecha</th>
-            <th class="px-4 py-2 text-left">Duración</th>
-            <th class="px-4 py-2 text-left">Logro</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let racha of historial" class="border-b">
-            <td class="px-4 py-2 text-gray-700">{{ racha.fecha }}</td>
-            <td class="px-4 py-2 text-primary-purple">{{ racha.duracion }} Días</td>
-            <td class="px-4 py-2 text-gray-700">{{ racha.logro }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <ul class="divide-y divide-gray-200">
+      <li *ngFor="let item of historial" class="py-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <p class="text-lg font-bold text-primary-purple">📅 {{ item.fecha }}</p>
+            <p class="text-gray-600">Duración: {{ item.duracion }} días</p>
+            <p class="text-gray-600">Logro: {{ item.logro }}</p>
+          </div>
+          <div class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full">
+            {{ item.duracion >= 7 ? '🏆 Excelente' : item.duracion >= 5 ? '🎉 Bueno' : '👍 Estable' }}
+          </div>
+        </div>
+      </li>
+    </ul>
+    <p *ngIf="historial.length === 0" class="text-gray-500 text-center mt-4">No hay rachas registradas aún.</p>
   </div>
 </div>

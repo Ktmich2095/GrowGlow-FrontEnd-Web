@@ -10,7 +10,7 @@ import { catchError, tap } from 'rxjs/operators';
 })
 export class AuthService {
   private readonly API_URL = 'http://localhost:5000/api/usuarios';
-  private readonly tokenKey = 'auth_token'; // Clave consistente
+  private readonly tokenKey = 'auth_token'; 
   private readonly userNameKey = 'userName';
 
   constructor(
@@ -23,7 +23,6 @@ export class AuthService {
     return isPlatformBrowser(this.platformId);
   }
 
-  // Método para registro que puede ser usado desde el servicio
   register(userData: any): Observable<any> {
     return this.httpClient.post(`${this.API_URL}/register`, userData).pipe(
       catchError(error => throwError(error))
@@ -63,6 +62,7 @@ export class AuthService {
   getToken(): string | null {
     return this.isBrowser ? localStorage.getItem(this.tokenKey) : null;
   }
+  
   getUsuarioId(): string | null {
     if (!this.isBrowser) return null;
     
@@ -71,7 +71,7 @@ export class AuthService {
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.id || null; // Asume que el payload del token incluye el ID del usuario como 'id'
+      return payload.id || null; 
     } catch (e) {
       console.error('Error al decodificar el token:', e);
       return null;

@@ -3,11 +3,12 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule,CommonModule],
+  imports: [FormsModule,CommonModule,RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -42,7 +43,7 @@ export default class LoginComponent {
   }
 
   goToForgotPassword(event: Event): void {
-    event.preventDefault(); // Esto previene la acción por defecto del formulario
-    this.router.navigate(['/forgot-password']); // Redirige a la página de olvido de contraseña
+    event.preventDefault(); 
+    this.router.navigate(['/forgot-password']); 
   }
 }

@@ -4,11 +4,11 @@ import { Component, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
-
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,RouterLink],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
@@ -24,7 +24,7 @@ export class RegisterComponent {
     private http: HttpClient, 
     private router: Router,
     private authService: AuthService,
-    private ngZone: NgZone // Inyecta NgZone
+    private ngZone: NgZone
   ) {}
 
   goToLogin() {
@@ -49,11 +49,9 @@ export class RegisterComponent {
         next: (response) => {
           console.log('Registro exitoso:', response);
           if (response?.usuario) {
-            this.authService.setToken(response.token);
-            this.authService.setCurrentUser(response.usuario.nombre);
-            
+           
             this.ngZone.run(() => {
-              alert('¡Registro exitoso! Serás redirigido al Dashboard.');
+              alert('¡Registro exitoso! Serás redirigido al Login.');
               
               setTimeout(() => {
                 this.router.navigate(['/login']);
