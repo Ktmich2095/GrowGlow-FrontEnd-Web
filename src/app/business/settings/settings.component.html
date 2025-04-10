@@ -1,64 +1,65 @@
-<div class="max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg dark:bg-gray-800">
-    <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Configuración</h2>
-    <!-- Sección: Notificaciones -->
-    <div class="p-6 bg-[#F5F7FA] dark:bg-gray-700 rounded-xl mb-6 border border-[#E3E6FA] dark:border-gray-600">
-      <h3 class="text-lg font-semibold text-[#6C5B7B] dark:text-purple-300 mb-4 flex items-center">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-        </svg>
-        Notificaciones
-      </h3>
-      <div class="space-y-3">
-        <label class="flex items-center space-x-3 p-3 hover:bg-[#E3E6FA] dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 cursor-pointer">
-          <input type="checkbox" [(ngModel)]="settings.notifications" 
-                 class="h-5 w-5 text-primary rounded focus:ring-primary border-gray-300 dark:border-gray-500 dark:bg-gray-600">
-          <span class="text-gray-700 dark:text-gray-300">Recibir alertas sobre el riego de tu orquídea</span>
-        </label>
-        <label class="flex items-center space-x-3 p-3 hover:bg-[#E3E6FA] dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 cursor-pointer">
-          <input type="checkbox" [(ngModel)]="settings.newsletter" 
-                 class="h-5 w-5 text-primary rounded focus:ring-primary border-gray-300 dark:border-gray-500 dark:bg-gray-600">
-          <span class="text-gray-700 dark:text-gray-300">Recibir novedades y consejos sobre orquídeas</span>
-        </label>
-      </div>
-    </div>
+<div class=" mb-20 max-w-3xl mx-auto p-6 bg-white rounded-2xl shadow-lg dark:bg-gray-800">
+  <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Configuración</h2>
   
-    <!-- Sección: Tema -->
-    <div class="p-6 bg-[#F5F7FA] dark:bg-gray-700 rounded-xl border border-[#E3E6FA] dark:border-gray-600">
-      <h3 class="text-lg font-semibold text-[#6C5B7B] dark:text-purple-300 mb-4 flex items-center">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
-        </svg>
-        Apariencia
-      </h3>
-      <div class="grid grid-cols-2 gap-4">
-        <button (click)="changeTheme('light')"
-          class="p-4 rounded-lg border-2 flex flex-col items-center transition-all duration-200 hover:border-primary"
-          [class.border-primary]="settings.theme === 'light'"
-          [class.bg-white]="settings.theme === 'light'"
-          [class.border-gray-200]="settings.theme !== 'light'"
-          [class.dark:bg-gray-800]="settings.theme !== 'light'">
-          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-200 to-blue-100 mb-2 flex items-center justify-center">
-            <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
-            </svg>
-          </div>
-          <span class="font-medium">Claro</span>
-        </button>
-        
-        <button (click)="changeTheme('dark')"
-          class="p-4 rounded-lg border-2 flex flex-col items-center transition-all duration-200 hover:border-primary"
-          [class.border-primary]="settings.theme === 'dark'"
-          [class.bg-gray-800]="settings.theme === 'dark'"
-          [class.text-white]="settings.theme === 'dark'"
-          [class.border-gray-200]="settings.theme !== 'dark'"
-          [class.dark:border-gray-600]="settings.theme !== 'dark'">
-          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 mb-2 flex items-center justify-center">
-            <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
-            </svg>
-          </div>
-          <span class="font-medium">Oscuro</span>
-        </button>
-      </div>
+  <div class="p-6 bg-[#F5F7FA] dark:bg-gray-700 rounded-xl mb-6 border border-[#E3E6FA] dark:border-gray-600">
+    <h3 class="text-lg font-semibold text-[#6C5B7B] dark:text-purple-300 mb-4 flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+      </svg>
+      Notificaciones
+    </h3>
+    <div class="space-y-3">
+      <label class="flex items-center space-x-3 p-3 hover:bg-[#E3E6FA] dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 cursor-pointer">
+        <input type="checkbox" [(ngModel)]="settings.notifications" 
+               (change)="onCheckboxChange()"
+               class="h-5 w-5 text-primary rounded focus:ring-primary border-gray-300 dark:border-gray-500 dark:bg-gray-600">
+        <span class="text-gray-700 dark:text-gray-300">Recibir alertas sobre el riego de tu orquídea</span>
+      </label>
+      <label class="flex items-center space-x-3 p-3 hover:bg-[#E3E6FA] dark:hover:bg-gray-600 rounded-lg transition-colors duration-200 cursor-pointer">
+        <input type="checkbox" [(ngModel)]="settings.newsletter" 
+               (change)="onCheckboxChange()"
+               class="h-5 w-5 text-primary rounded focus:ring-primary border-gray-300 dark:border-gray-500 dark:bg-gray-600">
+        <span class="text-gray-700 dark:text-gray-300">Recibir novedades y consejos sobre orquídeas</span>
+      </label>
     </div>
   </div>
+
+  <div class="p-6 bg-[#F5F7FA] dark:bg-gray-700 rounded-xl border border-[#E3E6FA] dark:border-gray-600">
+    <h3 class="text-lg font-semibold text-[#6C5B7B] dark:text-purple-300 mb-4 flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+      </svg>
+      Apariencia
+    </h3>
+    <div class="grid grid-cols-2 gap-4">
+      <button (click)="changeTheme('light')"
+        class="p-4 rounded-lg border-2 flex flex-col items-center transition-all duration-200 hover:border-primary"
+        [class.border-primary]="settings.theme === 'light'"
+        [class.bg-white]="settings.theme === 'light'"
+        [class.border-gray-200]="settings.theme !== 'light'"
+        [class.dark:bg-gray-800]="settings.theme !== 'light'">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-200 to-blue-100 mb-2 flex items-center justify-center">
+          <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+          </svg>
+        </div>
+        <span class="font-medium">Claro</span>
+      </button>
+      
+      <button (click)="changeTheme('dark')"
+        class="p-4 rounded-lg border-2 flex flex-col items-center transition-all duration-200 hover:border-primary"
+        [class.border-primary]="settings.theme === 'dark'"
+        [class.bg-gray-800]="settings.theme === 'dark'"
+        [class.text-white]="settings.theme === 'dark'"
+        [class.border-gray-200]="settings.theme !== 'dark'"
+        [class.dark:border-gray-600]="settings.theme !== 'dark'">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-700 to-gray-900 mb-2 flex items-center justify-center">
+          <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          </svg>
+        </div>
+        <span class="font-medium">Oscuro</span>
+      </button>
+    </div>
+  </div>
+</div>
