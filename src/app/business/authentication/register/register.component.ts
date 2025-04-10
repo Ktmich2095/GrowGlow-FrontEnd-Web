@@ -24,7 +24,7 @@ export class RegisterComponent {
     private http: HttpClient, 
     private router: Router,
     private authService: AuthService,
-    private ngZone: NgZone // Inyecta NgZone
+    private ngZone: NgZone
   ) {}
 
   goToLogin() {

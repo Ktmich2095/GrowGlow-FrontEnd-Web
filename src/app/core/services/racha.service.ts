@@ -40,15 +40,14 @@ private mapearNombreSensor(nombreOriginal: string): string {
     try {
       this.socket = io(this.API_URL, {
         auth: {
-          token: this.authService.getToken() // Opcional: envía el token JWT
+          token: this.authService.getToken() 
         },
-        transports: ['websocket'], // Fuerza WebSocket (mejor para producción)
-        reconnection: true, // Reconexión automática
-        reconnectionAttempts: 5, // Intentos de reconexión
-        reconnectionDelay: 1000 // Retardo entre intentos (ms)
+        transports: ['websocket'], 
+        reconnection: true, 
+        reconnectionAttempts: 5, 
+        reconnectionDelay: 1000 
       });
 
-      // Eventos de conexión/error
       this.socket.on('connect', () => {
         console.log('Conectado al servidor de sockets');
       });
@@ -57,7 +56,6 @@ private mapearNombreSensor(nombreOriginal: string): string {
         console.error('Error de conexión:', err.message);
       });
 
-      // Escucha eventos del servidor
       this.socket.on('actualizarSensores', (datosJson: string) => {
         const sensores = this.procesarDatosJson(datosJson);
         this.actualizarRacha(sensores);
@@ -65,7 +63,6 @@ private mapearNombreSensor(nombreOriginal: string): string {
 
     } catch (err) {
       console.error('Error al inicializar socket:', err);
-      // Puedes inicializar un mock aquí si falla la conexión real
       this.inicializarSocketMock();
     }
   }
@@ -113,14 +110,13 @@ private mapearNombreSensor(nombreOriginal: string): string {
       const clave = this.mapearNombreSensor(sensor.nombre);
       valores[clave] = sensor.valor;
     });
-    console.log('Datos procesados:', valores); // Log para verificar los datos procesados
+    console.log('Datos procesados:', valores);
     return valores;
 }
   private actualizarRacha(sensores: { [key: string]: number }) {
     const userId = this.getUsuarioActualId();
     if (!userId) return;
 
-    // Inicializar datos del usuario si no existen
     if (!this.historialPorUsuario[userId]) {
       this.historialPorUsuario[userId] = {
         racha: 0,

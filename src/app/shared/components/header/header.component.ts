@@ -26,12 +26,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   constructor(private router: Router, private rachaService: RachaService) {}
 
   ngOnInit(): void {
-    // Se suscribe a los datos de los sensores en tiempo real
     this.sensorSubscription = this.rachaService.getDatosSensores$().subscribe((sensores) => {
-      console.log('Datos de sensores recibidooooos:', sensores); // Log para verificar los datos
+      console.log('Datos de sensores recibidooooos:', sensores); 
       this.sensorData = sensores as { [key: string]: number };
 
-      // Verifica condiciones fuera de rango y agrega notificaciones
       for (let [key, value] of Object.entries(this.sensorData)) {
         if (key === 'temperatura' && (value < 20 || value > 28)) {
           this.addNotification(`El sensor de temperatura está fuera de rango: ${value}°C`);
@@ -45,15 +43,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Genera recordatorios de cuidado cada 30 segundos
     setInterval(() => {
       const randomTip = this.careTips[Math.floor(Math.random() * this.careTips.length)];
       this.addNotification(randomTip);
-    }, 30000 * 60); // Cada 30 segundos
+    }, 30000 ); 
   }
 
   ngOnDestroy(): void {
-    // Se desuscribe al salir del componente para evitar fugas de memoria
     if (this.sensorSubscription) {
       this.sensorSubscription.unsubscribe();
     }
@@ -70,7 +66,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   addNotification(message: string): void {
     this.notifications.push(message);
     if (this.notifications.length > 5) {
-      this.notifications.shift(); // Mantén un máximo de 10 notificaciones
+      this.notifications.shift();  
     }
   }
 

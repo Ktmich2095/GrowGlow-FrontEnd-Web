@@ -1,4 +1,3 @@
-// settings.component.ts
 import { Component, OnInit } from '@angular/core';
 import { SettingsService } from '../../core/services/settings.service';
 import { CommonModule } from '@angular/common';

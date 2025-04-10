@@ -43,7 +43,7 @@ export default class LoginComponent {
   }
 
   goToForgotPassword(event: Event): void {
-    event.preventDefault(); // Esto previene la acción por defecto del formulario
-    this.router.navigate(['/forgot-password']); // Redirige a la página de olvido de contraseña
+    event.preventDefault(); 
+    this.router.navigate(['/forgot-password']); 
   }
 }

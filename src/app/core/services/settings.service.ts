@@ -15,7 +15,6 @@ export class SettingsService {
   settings$ = this.settingsSubject.asObservable();
 
   constructor() {
-    // Cargar configuración guardada al iniciar
     const savedSettings = localStorage.getItem('appSettings');
     if (savedSettings) {
       this.settingsSubject.next(JSON.parse(savedSettings));
@@ -28,7 +27,6 @@ export class SettingsService {
     this.settingsSubject.next(updated);
     localStorage.setItem('appSettings', JSON.stringify(updated));
     
-    // Aplicar tema inmediatamente
     if (newSettings.theme) {
       this.applyTheme(newSettings.theme);
     }

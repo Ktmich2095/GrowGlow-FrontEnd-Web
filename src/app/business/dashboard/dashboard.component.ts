@@ -108,10 +108,10 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private processSensorData(data: SensorData[]): void {
-    console.log('Datos procesados para gráficos:', data); // Log para depuración
+    console.log('Datos procesados para gráficos:', data); 
     data.forEach(sensor => {
       const key = sensor.nombre.toLowerCase();
-      console.log('Procesando sensor:', key, sensor); // Log para cada sensor
+      console.log('Procesando sensor:', key, sensor);
       if (Math.abs(this.currentValues[key] - sensor.valor) > 0.5) {
         this.animateToNewValue(sensor);
       }
@@ -137,7 +137,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private animateToNewValue(data: SensorData): void {
-    console.log('Animando al nuevo valor:', data); // Depuración
+    console.log('Animando al nuevo valor:', data);
 
     const normalizedName = data.nombre.toLowerCase();
     const series = this.series[normalizedName];
@@ -145,25 +145,20 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (!series || !label) return;
 
-    // Obtener el valor máximo del sensor
-    const maxValue = this.maxValues[normalizedName] || 100; // Valor máximo predeterminado si no está definido
+    const maxValue = this.maxValues[normalizedName] || 100; 
 
-    // Calcular el porcentaje de progreso
     const targetPercentage = Math.min((data.valor / maxValue) * 100, 100);
 
-    // Obtener el valor actual del gráfico
     const currentValue = (series.data.values[0] as { value: number })?.value || 0;
 
-    // Limpiar intervalo anterior si existe
     if (this.animationIntervals[normalizedName]) {
       clearInterval(this.animationIntervals[normalizedName]);
     }
 
-    // Actualizar el valor actual
     this.currentValues[normalizedName] = data.valor;
 
-    const duration = 1000; // Duración de la animación en milisegundos
-    const steps = 30; // Número de pasos en la animación
+    const duration = 1000; 
+    const steps = 30;
     const increment = (targetPercentage - currentValue) / steps;
     let step = 0;
 
@@ -184,9 +179,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       label.set('text', `[bold]${Math.round(progress)}%[/]`);
 
       if (progress > 100) {
-        label.set('fill', am5.color(0xe74c3c)); // Color rojo si excede el límite
+        label.set('fill', am5.color(0xe74c3c)); 
       } else {
-        label.set('fill', am5.color(0x2d3436)); // Color normal
+        label.set('fill', am5.color(0x2d3436)); 
       }
 
       step++;
@@ -200,10 +195,8 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (!series || !label) return;
 
-    // Obtener el valor máximo del sensor
-    const maxValue = this.maxValues[normalizedName] || 100; // Valor máximo predeterminado si no está definido
+    const maxValue = this.maxValues[normalizedName] || 100; 
 
-    // Calcular el porcentaje de progreso
     const progress = Math.min((data.valor / maxValue) * 100, 100);
     const remaining = 100 - progress;
 
@@ -215,9 +208,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     label.set('text', `[bold]${Math.round(progress)}%[/]`);
 
     if (data.valor > maxValue) {
-      label.set('fill', am5.color(0xe74c3c)); // Color rojo si excede el máximo
+      label.set('fill', am5.color(0xe74c3c)); 
     } else {
-      label.set('fill', am5.color(0x2d3436)); // Color normal
+      label.set('fill', am5.color(0x2d3436)); 
     }
   }
 

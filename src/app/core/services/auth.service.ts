@@ -23,7 +23,6 @@ export class AuthService {
     return isPlatformBrowser(this.platformId);
   }
 
-  // Método para registro que puede ser usado desde el servicio
   register(userData: any): Observable<any> {
     return this.httpClient.post(`${this.API_URL}/register`, userData).pipe(
       catchError(error => throwError(error))
@@ -71,7 +70,7 @@ export class AuthService {
 
     try {
       const payload = JSON.parse(atob(token.split('.')[1]));
-      return payload.id || null; // Asume que el payload del token incluye el ID del usuario como 'id'
+      return payload.id || null; 
     } catch (e) {
       console.error('Error al decodificar el token:', e);
       return null;
