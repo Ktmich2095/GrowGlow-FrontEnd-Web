@@ -10,7 +10,7 @@ import { catchError, tap } from 'rxjs/operators';
 })
 export class AuthService {
   private readonly API_URL = 'http://localhost:5000/api/usuarios';
-  private readonly tokenKey = 'auth_token'; // Clave consistente
+  private readonly tokenKey = 'auth_token'; 
   private readonly userNameKey = 'userName';
 
   constructor(

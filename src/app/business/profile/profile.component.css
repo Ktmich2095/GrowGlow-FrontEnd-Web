@@ -1,0 +1,20 @@
+.profile-container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.profile-image img {
+  border: 2px solid #ddd;
+}
+
+.profile-info h2 {
+  margin-bottom: 4px;
+}
+
+.profile-info p {
+  margin: 0;
+}
+
+button {
+  transition: background-color 0.3s ease;
+}
