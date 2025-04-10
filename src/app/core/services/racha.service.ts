@@ -11,33 +11,80 @@ export class RachaService {
     historialRachas: { fecha: string, duracion: number, logro: string }[];
   } } = {};
   public socket!: Socket
+  private readonly API_URL = 'http://localhost:5000';
 
   constructor(private authService: AuthService,) {
     this.inicializarSocket();
   }
+  private formatearDatos(datosAgrupados: any[]): { [key: string]: number } {
+    const datos: { [key: string]: number } = {};
+    datosAgrupados.forEach(sensor => {
+        const clave = this.mapearNombreSensor(sensor._id); // Convierte "Temperatura" → "temperatura_suelo"
+        datos[clave] = sensor.valor;
+    });
+    return datos;
+}
 
+private mapearNombreSensor(nombreOriginal: string): string {
+    const mapeo: { [key: string]: string } = {
+        'Temperatura': 'temperatura_suelo',
+        'Luz': 'luz',
+        'Humedad Suelo': 'humedad_suelo',
+        'Humedad Aire': 'humedad_aire'
+    };
+    return mapeo[nombreOriginal] || nombreOriginal.toLowerCase();
+}
   private inicializarSocket() {
-    // Simular conexión al servidor de sockets
+    try {
+      this.socket = io(this.API_URL, {
+        auth: {
+          token: this.authService.getToken() // Opcional: envía el token JWT
+        },
+        transports: ['websocket'], // Fuerza WebSocket (mejor para producción)
+        reconnection: true, // Reconexión automática
+        reconnectionAttempts: 5, // Intentos de reconexión
+        reconnectionDelay: 1000 // Retardo entre intentos (ms)
+      });
+
+      // Eventos de conexión/error
+      this.socket.on('connect', () => {
+        console.log('Conectado al servidor de sockets');
+      });
+
+      this.socket.on('connect_error', (err) => {
+        console.error('Error de conexión:', err.message);
+      });
+
+      // Escucha eventos del servidor
+      this.socket.on('actualizarSensores', (datosJson: string) => {
+        const sensores = this.procesarDatosJson(datosJson);
+        this.actualizarRacha(sensores);
+      });
+
+    } catch (err) {
+      console.error('Error al inicializar socket:', err);
+      // Puedes inicializar un mock aquí si falla la conexión real
+      this.inicializarSocketMock();
+    }
+  }
+  private inicializarSocketMock() {
     this.socket = {
       on: (event: string, callback: (data: string) => void) => {
         if (event === 'actualizarSensores') {
           setInterval(() => {
-            const datosJson = JSON.stringify([
-              { nombre: 'temperatura_suelo', valor: Math.random() > 0.5 ? 22 : 30, unidad: '°C' },
-              { nombre: 'temperatura_aire', valor: 25, unidad: '°C' },
-              { nombre: 'humedad_aire', valor: 60, unidad: '%' },
-              { nombre: 'luz', valor: 300, unidad: 'lux' }
+            const mockData = JSON.stringify([
+              { nombre: 'temperatura_suelo', valor: Math.random() > 0.5 ? 22 : 30 },
+              { nombre: 'temperatura_aire', valor: 25 },
+              { nombre: 'humedad_aire', valor: 60 },
+              { nombre: 'luz', valor: 300 }
             ]);
-            callback(datosJson);
-            const sensores = this.procesarDatosJson(datosJson);
-            this.actualizarRacha(sensores);
+            callback(mockData);
           }, 5000);
         }
       },
-      off: (event: string) => {
-        console.log(`Socket event '${event}' desconectado.`);
-      }
-    } as any;
+      off: (event: string) => console.log(`Socket mock desconectado: ${event}`),
+      disconnect: () => {}
+    } as Socket;
   }
 
   private getUsuarioActualId(): string | null {
@@ -57,14 +104,14 @@ export class RachaService {
   }
 
   private procesarDatosJson(datosJson: string): { [key: string]: number } {
-    const sensores = JSON.parse(datosJson);
+    const sensores = JSON.parse(datosJson); 
     const valores: { [key: string]: number } = {};
-    sensores.forEach((sensor: { nombre: string; valor: number }) => {
-      valores[sensor.nombre] = sensor.valor;
+    sensores.forEach((sensor: { _id: string, valor: number }) => {
+        const clave = this.mapearNombreSensor(sensor._id);
+        valores[clave] = sensor.valor;
     });
     return valores;
-  }
-
+}
   private actualizarRacha(sensores: { [key: string]: number }) {
     const userId = this.getUsuarioActualId();
     if (!userId) return;
@@ -113,4 +160,5 @@ export class RachaService {
     if (duracion >= 5) return 'Regó con precisión durante la semana.';
     return 'Mantuvo su planta estable por varios días.';
   }
+  
 }
