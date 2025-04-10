@@ -12,11 +12,19 @@
       <div class="sensor-card bg-white shadow-md rounded-lg p-4">
         <h2 class="text-lg font-semibold text-secondary mb-2">Temperatura</h2>
         <div id="chart-temperatura" class="chart h-40"></div>
+        <div class="text-center mt-2">
+          <span class="text-xl font-bold">{{ currentValues['temperatura'] | number:'1.0-0' }}</span>
+          <span class="text-gray-500 ml-1">°C</span>
+        </div>
       </div>
 
       <div class="sensor-card bg-white shadow-md rounded-lg p-4">
         <h2 class="text-lg font-semibold text-secondary mb-2">Humedad del Aire</h2>
         <div id="chart-humedadaire" class="chart h-40"></div>
+        <div class="text-center mt-2">
+          <span class="text-xl font-bold">{{ currentValues['humedadaire'] | number:'1.0-0' }}</span>
+          <span class="text-gray-500 ml-1">%</span>
+        </div>
       </div>
     </div>
 
@@ -30,11 +38,19 @@
       <div class="sensor-card bg-white shadow-md rounded-lg p-4">
         <h2 class="text-lg font-semibold text-secondary mb-2">Humedad del Suelo</h2>
         <div id="chart-humedadsuelo" class="chart h-40"></div>
+        <div class="text-center mt-2">
+          <span class="text-xl font-bold">{{ currentValues['humedadsuelo'] | number:'1.0-0' }}</span>
+          <span class="text-gray-500 ml-1">%</span>
+        </div>
       </div>
 
       <div class="sensor-card bg-white shadow-md rounded-lg p-4">
         <h2 class="text-lg font-semibold text-secondary mb-2">Nivel de Luz</h2>
         <div id="chart-luz" class="chart h-40"></div>
+        <div class="text-center mt-2">
+          <span class="text-xl font-bold">{{ currentValues['luz'] | number:'1.0-0' }}</span>
+          <span class="text-gray-500 ml-1">lux</span>
+        </div>
       </div>
     </div>
   </div>

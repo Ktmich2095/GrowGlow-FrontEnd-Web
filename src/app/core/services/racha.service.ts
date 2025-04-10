@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { io, Socket } from 'socket.io-client';
 import { AuthService } from './auth.service'; 
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -26,14 +27,15 @@ export class RachaService {
 }
 
 private mapearNombreSensor(nombreOriginal: string): string {
-    const mapeo: { [key: string]: string } = {
-        'Temperatura': 'temperatura_suelo',
-        'Luz': 'luz',
-        'Humedad Suelo': 'humedad_suelo',
-        'Humedad Aire': 'humedad_aire'
-    };
-    return mapeo[nombreOriginal] || nombreOriginal.toLowerCase();
+  const mapeo: { [key: string]: string } = {
+    'Humedad Suelo': 'humedadsuelo',
+    'Humedad Aire': 'humedadaire',
+    'Temperatura': 'temperatura',
+    'Luz': 'luz'
+  };
+  return mapeo[nombreOriginal] || nombreOriginal.toLowerCase();
 }
+
   private inicializarSocket() {
     try {
       this.socket = io(this.API_URL, {
@@ -73,10 +75,11 @@ private mapearNombreSensor(nombreOriginal: string): string {
         if (event === 'actualizarSensores') {
           setInterval(() => {
             const mockData = JSON.stringify([
-              { nombre: 'temperatura_suelo', valor: Math.random() > 0.5 ? 22 : 30 },
-              { nombre: 'temperatura_aire', valor: 25 },
-              { nombre: 'humedad_aire', valor: 60 },
-              { nombre: 'luz', valor: 300 }
+              { nombre: 'Humedad Suelo', valor: 60, unidad: '%' },
+              { nombre: 'Humedad Aire', valor: 50, unidad: '%' },
+              { nombre: 'Temperatura Suelo', valor: 22, unidad: '°C' },
+              { nombre: 'Temperatura Aire', valor: 25, unidad: '°C' },
+              { nombre: 'Luz', valor: 300, unidad: 'lux' }
             ]);
             callback(mockData);
           }, 5000);
@@ -104,11 +107,11 @@ private mapearNombreSensor(nombreOriginal: string): string {
   }
 
   private procesarDatosJson(datosJson: string): { [key: string]: number } {
-    const sensores = JSON.parse(datosJson); 
+    const sensores = JSON.parse(datosJson);
     const valores: { [key: string]: number } = {};
-    sensores.forEach((sensor: { _id: string, valor: number }) => {
-        const clave = this.mapearNombreSensor(sensor._id);
-        valores[clave] = sensor.valor;
+    sensores.forEach((sensor: { nombre: string; valor: number }) => {
+      const clave = this.mapearNombreSensor(sensor.nombre);
+      valores[clave] = sensor.valor;
     });
     return valores;
 }
@@ -128,8 +131,6 @@ private mapearNombreSensor(nombreOriginal: string): string {
     
     if (this.condicionesOptimas(sensores)) {
       usuarioData.racha++;
-      // Podrías llamar aquí a tu backend para guardar el progreso
-      // this.authService.actualizarActividad(userId).subscribe();
     } else {
       if (usuarioData.racha > 0) {
         usuarioData.historialRachas.unshift({
@@ -148,9 +149,9 @@ private mapearNombreSensor(nombreOriginal: string): string {
 
   private condicionesOptimas(sensores: { [key: string]: number }): boolean {
     return (
-      sensores['temperatura_suelo'] >= 18 && sensores['temperatura_suelo'] <= 25 &&
-      sensores['temperatura_aire'] >= 20 && sensores['temperatura_aire'] <= 28 &&
-      sensores['humedad_aire'] >= 40 && sensores['humedad_aire'] <= 70 &&
+      sensores['humedadsuelo'] >= 18 && sensores['humedadsuelo'] <= 25 &&
+      sensores['temperatura'] >= 20 && sensores['temperatura'] <= 28 &&
+      sensores['humedadaire'] >= 40 && sensores['humedadaire'] <= 70 &&
       sensores['luz'] >= 200 && sensores['luz'] <= 500
     );
   }
@@ -160,5 +161,14 @@ private mapearNombreSensor(nombreOriginal: string): string {
     if (duracion >= 5) return 'Regó con precisión durante la semana.';
     return 'Mantuvo su planta estable por varios días.';
   }
+  // Añade este método público para exponer los datos
+public getDatosSensores$(): Observable<{ [key: string]: number }> {
+  return new Observable(observer => {
+    this.socket.on('actualizarSensores', (datosJson: string) => {
+      const sensores = this.procesarDatosJson(datosJson);
+      observer.next(sensores);
+    });
+  });
+}
   
 }

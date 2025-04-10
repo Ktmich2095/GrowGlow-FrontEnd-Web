@@ -4,7 +4,7 @@ import * as am5percent from '@amcharts/amcharts5/percent';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { WebSocketService } from '../../core/services/web-socket.service';
+import { RachaService } from '../../core/services/racha.service';
 
 interface SensorData {
   nombre: string;
@@ -25,28 +25,34 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   private charts: { [key: string]: am5percent.PieChart } = {};
   private series: { [key: string]: am5percent.PieSeries } = {};
   private labels: { [key: string]: am5.Label } = {};
-  private updateInterval: any;
   private animationIntervals: { [key: string]: any } = {};
   lastUpdate: Date = new Date();
+  currentValues: { [key: string]: number } = {
+    temperatura: 0,
+    humedadaire: 0,
+    humedadsuelo: 0,
+    luz: 0
+  };
 
   private colors: { [key: string]: am5.Color } = {
-    temperatura: am5.color(0xe74c3c), // Rojo para Temperatura
-    humedadaire: am5.color(0x3498db), // Azul para Humedad del Aire
-    humedadsuelo: am5.color(0x2ecc71), // Verde para Humedad del Suelo
-    luz: am5.color(0xf39c12) // Naranja para Luz
+    temperatura: am5.color(0xe74c3c),
+    humedadaire: am5.color(0x3498db),
+    humedadsuelo: am5.color(0x2ecc71),
+    luz: am5.color(0xf39c12)
   };
 
-  private units: { [key: string]: string } = {
-    Temperatura: '°C',
-    HumedadAire: '%',
-    HumedadSuelo: '%',
-    Luz: 'lux'
+  private maxValues: { [key: string]: number } = {  
+    temperatura: 30,     
+    humedadaire: 70,     
+    humedadsuelo: 60,   
+    luz: 1500            
   };
+  
 
-  constructor(private http: HttpClient, private webSocketService: WebSocketService) {}
+  constructor(private http: HttpClient, private rachaService: RachaService) {}
 
   ngOnInit(): void {
-    this.setupRealTimeUpdates(); // Conexión a WebSocket
+    this.setupRealTimeUpdates();
   }
 
   ngAfterViewInit(): void {
@@ -56,24 +62,59 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(): void {
     this.clearIntervals();
-    this.webSocketService.disconnect(); // Cierra la conexión WebSocket
     Object.values(this.roots).forEach(root => root.dispose());
   }
 
   private setupRealTimeUpdates(): void {
-    this.webSocketService.listen<SensorData[]>('sensor-data').subscribe({
-      next: (data: SensorData[]) => {
-        this.processSensorData(data); // Actualiza las gráficas con los datos recibidos
+    this.rachaService.getDatosSensores$().subscribe({
+      next: (sensores: { [key: string]: number }) => {
+        console.log('Datos brutos recibidos del socket:', sensores);
+        this.lastUpdate = new Date();
+        const mappedData = this.mapToSensorDataArray(sensores);
+        console.log('Datos mapeados para gráficos:', mappedData);
+        this.processSensorData(mappedData);
       },
-      error: (err) => console.error('Error en WebSocket:', err),
-      complete: () => console.log('Conexión WebSocket cerrada'),
+      error: (err) => console.error('Error en socket:', err)
     });
   }
 
+  private mapToSensorDataArray(sensores: { [key: string]: number }): SensorData[] {
+    return [
+      { 
+        nombre: 'temperatura', 
+        valor: sensores['temperatura'] || 0, 
+        unidad: '°C', 
+        fecha: new Date().toISOString() 
+      },
+      { 
+        nombre: 'humedadaire', 
+        valor: sensores['humedadaire'] || 0, 
+        unidad: '%', 
+        fecha: new Date().toISOString() 
+      },
+      { 
+        nombre: 'humedadsuelo', 
+        valor: sensores['humedadsuelo'] || 0, 
+        unidad: '%', 
+        fecha: new Date().toISOString() 
+      },
+      { 
+        nombre: 'luz', 
+        valor: sensores['luz'] || 0, 
+        unidad: 'lux', 
+        fecha: new Date().toISOString() 
+      }
+    ];
+  }
+
   private processSensorData(data: SensorData[]): void {
-    this.lastUpdate = new Date();
+    console.log('Datos procesados para gráficos:', data); // Log para depuración
     data.forEach(sensor => {
-      this.animateToNewValue(sensor);
+      const key = sensor.nombre.toLowerCase();
+      console.log('Procesando sensor:', key, sensor); // Log para cada sensor
+      if (Math.abs(this.currentValues[key] - sensor.valor) > 0.5) {
+        this.animateToNewValue(sensor);
+      }
     });
   }
 
@@ -90,28 +131,40 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       { nombre: "Luz", valor: 1200, unidad: "lux", fecha: new Date().toISOString() }
     ];
 
-    console.log('Cargando datos iniciales:', staticData);
-
     staticData.forEach(sensor => {
       this.updateProgressChart(sensor);
     });
   }
 
   private animateToNewValue(data: SensorData): void {
-    const normalizedName = data.nombre.replace(/\s+/g, '').toLowerCase();
+    console.log('Animando al nuevo valor:', data); // Depuración
+
+    const normalizedName = data.nombre.toLowerCase();
     const series = this.series[normalizedName];
     const label = this.labels[normalizedName];
 
-    if (!series || !label) {
-      console.error(`No se encontró la serie o etiqueta para: ${normalizedName}`);
-      return;
+    if (!series || !label) return;
+
+    // Obtener el valor máximo del sensor
+    const maxValue = this.maxValues[normalizedName] || 100; // Valor máximo predeterminado si no está definido
+
+    // Calcular el porcentaje de progreso
+    const targetPercentage = Math.min((data.valor / maxValue) * 100, 100);
+
+    // Obtener el valor actual del gráfico
+    const currentValue = (series.data.values[0] as { value: number })?.value || 0;
+
+    // Limpiar intervalo anterior si existe
+    if (this.animationIntervals[normalizedName]) {
+      clearInterval(this.animationIntervals[normalizedName]);
     }
 
-    let currentValue = (series.data.values[0] as { value: number })?.value || 0;
-    const targetValue = Math.min(data.valor, 100); // Limita el progreso al 100%
-    const duration = 2000;
-    const steps = 60;
-    const increment = (targetValue - currentValue) / steps;
+    // Actualizar el valor actual
+    this.currentValues[normalizedName] = data.valor;
+
+    const duration = 1000; // Duración de la animación en milisegundos
+    const steps = 30; // Número de pasos en la animación
+    const increment = (targetPercentage - currentValue) / steps;
     let step = 0;
 
     this.animationIntervals[normalizedName] = setInterval(() => {
@@ -120,47 +173,58 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         return;
       }
 
-      currentValue += increment;
-      const progress = Math.round(currentValue);
+      const progress = currentValue + increment * step;
       const remaining = 100 - progress;
 
       series.data.setAll([
-        { category: "Progreso", value: progress, color: this.colors[normalizedName] }, // Color único para el progreso
-        { category: "Restante", value: remaining, color: am5.color(0xe0e0e0) } // Color gris claro para la parte restante
+        { category: 'Progreso', value: progress, color: this.colors[normalizedName] },
+        { category: 'Restante', value: remaining, color: am5.color(0xe0e0e0) }
       ]);
 
-      label.set("text", `[bold]${progress}%[/]`);
+      label.set('text', `[bold]${Math.round(progress)}%[/]`);
+
+      if (progress > 100) {
+        label.set('fill', am5.color(0xe74c3c)); // Color rojo si excede el límite
+      } else {
+        label.set('fill', am5.color(0x2d3436)); // Color normal
+      }
+
       step++;
     }, duration / steps);
   }
 
   private updateProgressChart(data: SensorData): void {
-    const normalizedName = data.nombre.replace(/\s+/g, '').toLowerCase();
+    const normalizedName = data.nombre.toLowerCase();
     const series = this.series[normalizedName];
     const label = this.labels[normalizedName];
 
-    if (!series || !label) {
-      console.error(`No se encontró la serie o etiqueta para: ${normalizedName}`);
-      return;
-    }
+    if (!series || !label) return;
 
-    const progress = Math.min(data.valor, 100); // Limita el progreso al 100%
+    // Obtener el valor máximo del sensor
+    const maxValue = this.maxValues[normalizedName] || 100; // Valor máximo predeterminado si no está definido
+
+    // Calcular el porcentaje de progreso
+    const progress = Math.min((data.valor / maxValue) * 100, 100);
     const remaining = 100 - progress;
 
     series.data.setAll([
-      { category: "Progreso", value: progress, color: this.colors[normalizedName] }, // Color único para el progreso
-      { category: "Restante", value: remaining, color: am5.color(0xe0e0e0) } // Color gris claro para la parte restante
+      { category: 'Progreso', value: progress, color: this.colors[normalizedName] },
+      { category: 'Restante', value: remaining, color: am5.color(0xe0e0e0) }
     ]);
 
-    label.set("text", `[bold]${progress}%[/]`);
-  }
+    label.set('text', `[bold]${Math.round(progress)}%[/]`);
 
-  private formatSensorValue(value: number, unit: string): string {
-    return value.toString();
+    if (data.valor > maxValue) {
+      label.set('fill', am5.color(0xe74c3c)); // Color rojo si excede el máximo
+    } else {
+      label.set('fill', am5.color(0x2d3436)); // Color normal
+    }
   }
 
   private clearIntervals(): void {
-    Object.values(this.animationIntervals).forEach(interval => clearInterval(interval));
+    Object.values(this.animationIntervals).forEach(interval => {
+      if (interval) clearInterval(interval);
+    });
   }
 
   private createProgressChart(sensor: string): void {
@@ -177,14 +241,13 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       am5percent.PieSeries.new(root, {
         valueField: "value",
         categoryField: "category",
-        innerRadius: am5.percent(70) // Ajusta el radio interno para crear el efecto de dona
+        innerRadius: am5.percent(70)
       })
     );
 
-    // Datos iniciales para mostrar progreso
     series.data.setAll([
-      { category: "Progreso", value: 0, color: this.colors[sensor] }, // Color único para el progreso
-      { category: "Restante", value: 100, color: am5.color(0xe0e0e0) } // Color gris claro para la parte restante
+      { category: "Progreso", value: 0, color: this.colors[sensor] },
+      { category: "Restante", value: 100, color: am5.color(0xe0e0e0) }
     ]);
 
     const label = chart.seriesContainer.children.push(
