@@ -113,6 +113,7 @@ private mapearNombreSensor(nombreOriginal: string): string {
       const clave = this.mapearNombreSensor(sensor.nombre);
       valores[clave] = sensor.valor;
     });
+    console.log('Datos procesados:', valores); // Log para verificar los datos procesados
     return valores;
 }
   private actualizarRacha(sensores: { [key: string]: number }) {
@@ -161,14 +162,13 @@ private mapearNombreSensor(nombreOriginal: string): string {
     if (duracion >= 5) return 'Regó con precisión durante la semana.';
     return 'Mantuvo su planta estable por varios días.';
   }
-  // Añade este método público para exponer los datos
-public getDatosSensores$(): Observable<{ [key: string]: number }> {
-  return new Observable(observer => {
-    this.socket.on('actualizarSensores', (datosJson: string) => {
-      const sensores = this.procesarDatosJson(datosJson);
-      observer.next(sensores);
+  public getDatosSensores$(): Observable<{ [key: string]: number }> {
+    return new Observable(observer => {
+      this.socket.on('actualizarSensores', (datosJson: string) => {
+        const sensores = this.procesarDatosJson(datosJson);
+        observer.next(sensores);
+      });
     });
-  });
-}
+  }
   
 }
