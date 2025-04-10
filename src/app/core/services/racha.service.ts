@@ -20,7 +20,7 @@ export class RachaService {
   private formatearDatos(datosAgrupados: any[]): { [key: string]: number } {
     const datos: { [key: string]: number } = {};
     datosAgrupados.forEach(sensor => {
-        const clave = this.mapearNombreSensor(sensor._id); // Convierte "Temperatura" → "temperatura_suelo"
+        const clave = this.mapearNombreSensor(sensor._id); 
         datos[clave] = sensor.valor;
     });
     return datos;
@@ -146,10 +146,10 @@ private mapearNombreSensor(nombreOriginal: string): string {
 
   private condicionesOptimas(sensores: { [key: string]: number }): boolean {
     return (
-      sensores['humedadsuelo'] >= 18 && sensores['humedadsuelo'] <= 25 &&
-      sensores['temperatura'] >= 20 && sensores['temperatura'] <= 28 &&
+      sensores['humedadsuelo'] >= 40 && sensores['humedadsuelo'] <= 60 &&
+      sensores['temperatura'] >= 18 && sensores['temperatura'] <= 28 &&
       sensores['humedadaire'] >= 40 && sensores['humedadaire'] <= 70 &&
-      sensores['luz'] >= 200 && sensores['luz'] <= 500
+      sensores['luz'] >= 1000  && sensores['luz'] <= 2500 
     );
   }
 

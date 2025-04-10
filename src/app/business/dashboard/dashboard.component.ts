@@ -42,10 +42,10 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   private maxValues: { [key: string]: number } = {  
-    temperatura: 30,     
-    humedadaire: 70,     
-    humedadsuelo: 60,   
-    luz: 1500            
+    temperatura: 35,     
+    humedadaire: 90,     
+    humedadsuelo: 70,   
+    luz: 3000            
   };
   
 

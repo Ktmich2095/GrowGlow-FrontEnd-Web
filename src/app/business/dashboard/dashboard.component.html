@@ -7,7 +7,6 @@
   </header>
 
   <div class="grid grid-cols-3 gap-4 items-center">
-    <!-- Columna izquierda -->
     <div class="flex flex-col gap-4">
       <div class="sensor-card bg-white shadow-md rounded-lg p-4">
         <h2 class="text-lg font-semibold text-secondary mb-2">Temperatura</h2>
@@ -15,6 +14,7 @@
         <div class="text-center mt-2">
           <span class="text-xl font-bold">{{ currentValues['temperatura'] | number:'1.0-0' }}</span>
           <span class="text-gray-500 ml-1">°C</span>
+          <div class="text-sm text-gray-500">Ideal: 18°C – 28°C | Máx: 35°C | Mín: 15°C</div>
         </div>
       </div>
 
@@ -24,16 +24,15 @@
         <div class="text-center mt-2">
           <span class="text-xl font-bold">{{ currentValues['humedadaire'] | number:'1.0-0' }}</span>
           <span class="text-gray-500 ml-1">%</span>
+          <div class="text-sm text-gray-500">Ideal: 50% – 70% | Máx: 90% | Mín: 30%</div>
         </div>
       </div>
     </div>
 
-    <!-- Imagen central -->
     <div class="flex justify-center items-center">
       <img src="assets/moth.png" alt="Planta en Maceta" class="max-h-80 object-contain" />
     </div>
 
-    <!-- Columna derecha -->
     <div class="flex flex-col gap-4">
       <div class="sensor-card bg-white shadow-md rounded-lg p-4">
         <h2 class="text-lg font-semibold text-secondary mb-2">Humedad del Suelo</h2>
@@ -41,6 +40,7 @@
         <div class="text-center mt-2">
           <span class="text-xl font-bold">{{ currentValues['humedadsuelo'] | number:'1.0-0' }}</span>
           <span class="text-gray-500 ml-1">%</span>
+          <div class="text-sm text-gray-500">Ideal: 40% – 60% | Máx: 70% | Mín: 30%</div>
         </div>
       </div>
 
@@ -50,6 +50,7 @@
         <div class="text-center mt-2">
           <span class="text-xl font-bold">{{ currentValues['luz'] | number:'1.0-0' }}</span>
           <span class="text-gray-500 ml-1">lux</span>
+          <div class="text-sm text-gray-500">Ideal: 1000 – 2500 lux | Máx: 4000 | Mín: 500</div>
         </div>
       </div>
     </div>

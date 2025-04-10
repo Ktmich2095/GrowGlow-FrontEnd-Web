@@ -62,6 +62,7 @@ export class AuthService {
   getToken(): string | null {
     return this.isBrowser ? localStorage.getItem(this.tokenKey) : null;
   }
+  
   getUsuarioId(): string | null {
     if (!this.isBrowser) return null;
     
